@@ -14,6 +14,7 @@ int start();
 bool input(int AI);
 bool win();
 void print(bool header);
+int AI_step();
 
 int main()
 {
@@ -50,7 +51,7 @@ int main()
     unsigned short step_num = 0;
     while (!win())
     {
-        if (step_num == 10)
+        if (step_num == 9)
             break;
         system("cls");
         if (mode == 0)
@@ -64,15 +65,25 @@ int main()
         {
             if (step)
             {
-                int k;
-                while (!input(k))
+                short k = 1;
+                if (mode == 1)
                 {
-                    if (mode == 1)
+                    while (!input(k))
                     {
-                        k = rand()%10;
+                        k = rand()%10+1;
+                    }
+                } else
+                {
+                    k = AI_step();
+                    if (k != 0)
+                    {
+                        input(k);
                     } else
                     {
-                        cout << "Error: 404" << endl;
+                        while (!input(k))
+                        {
+                            k = rand()%10;
+                        }
                     }
                 }
             } else
@@ -83,6 +94,7 @@ int main()
                 }
             }
         }
+        step_num++;
     }
 
     system("cls");
@@ -90,9 +102,9 @@ int main()
     cout << endl;
     if (!win())
     {
-        cout << "\tDraw!" << endl;
+        cout << "Draw!" << endl;
     } else
-    if (!step)
+    if (step)
     {
         cout << name1 << " win!" << endl;
     } else
@@ -111,10 +123,10 @@ void print(bool header)
     {
         cout << "\t\t*** Tic Tac Toe ***\n\n";
     }
-    for (int i = 0; i < 3; i++)
+    for (short i = 0; i < 3; i++)
     {
         cout << " ";
-        for (int j = 0; j < 3; j++)
+        for (short j = 0; j < 3; j++)
         {
             cout << "| " << pole[i][j] << " ";
         }
@@ -124,10 +136,10 @@ void print(bool header)
 
 int start()
 {
-        int l = 0;
-    for (int i = 0; i < 3; i++)
+    short l = 0;
+    for (short i = 0; i < 3; i++)
     {
-        for (int j = 0; j < 3; j++, l++)
+        for (short j = 0; j < 3; j++, l++)
         {
             pole[i][j] = 49+l;
         }
@@ -221,11 +233,10 @@ bool input (int AI)
     } else
     {
         cout << "Computer go." << endl;
-        _getch();
     }
 
-    int i, j;
-    int k;
+    short i, j;
+    unsigned short k;
     if (!AI)
     {
         cin >> k;
@@ -266,7 +277,7 @@ bool input (int AI)
 
 bool win()
 {
-    for (int i = 0; i < 3; i++)
+    for (short i = 0; i < 3; i++)
     {
         if ((pole[i][0] == pole[i][1]) && (pole[i][1] == pole[i][2]))
             return true;
@@ -278,4 +289,48 @@ bool win()
     if ((pole[0][2] == pole[1][1]) && (pole[2][0] == pole[1][1]))
         return true;
     return false;
+}
+
+int AI_step()
+{
+    char pole_copy[3][3];
+    for (short i = 0; i < 3; i++)
+    {
+        for (short j = 0; j < 3; j++)
+        {
+            pole_copy[i][j] = pole[i][j];
+        }
+    }
+
+    for (short k = 1; k <= 9; k++)
+    {
+        unsigned short i, j;
+        if (k % 3 == 0)
+        {
+            i = k/3-1;
+            j = 2;
+        } else
+        {
+            i = k/3;
+            j = k%3-1;
+        }
+        if (pole_copy[i][j] != 'X' && pole_copy[i][j] != 'O')
+        {
+            if (!step)
+            {
+                pole_copy[i][j] = 'X';
+            } else
+            {
+                pole_copy[i][j] = 'O';
+            }
+            if (win())
+            {
+                return k;
+            } else
+            {
+                pole_copy[i][j] = k;
+            }
+        }
+    }
+    return 0;
 }
