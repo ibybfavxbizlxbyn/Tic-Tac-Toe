@@ -1,7 +1,13 @@
 # depslib dependency file v1.0
-1483733411 source:c:\users\nikolay\desktop\programs\tictactoe\main.cpp
+1483811257 source:c:\users\nikolay\desktop\programs\tictactoe\main.cpp
+	"header.h"
+
+1483809456 c:\users\nikolay\desktop\programs\tictactoe\header.h
 	<iostream>
-	<ctime>
 	<conio.h>
 	<cstdlib>
+	<ctime>
+
+1483809456 source:c:\users\nikolay\desktop\programs\tictactoe\functions.cpp
+	"header.h"
 
